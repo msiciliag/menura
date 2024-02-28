@@ -8,7 +8,7 @@ A transcript tool based on Assembly AI
 - TODO: meter las dependencias
 # Installation
 > It is recomended to use a python virtual enviroment.
-## Dependencies:
+## Dependencies:
 - Hola
 - Cuales hay q instalar?
 ```
