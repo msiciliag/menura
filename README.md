@@ -1,5 +1,5 @@
 # menura
-A transcript tool that records your recordings into Notion. Made using a Raspberry Pi and Assembly AI.
+A transcription tool that saves in text format your recordings in real time. Supports Notion API. Made using a Raspberry Pi and Assembly AI.
 ## Hardware requirements: (TODO)
 - Raspberry Pi (tested on model 3B)
 - USB microphone
