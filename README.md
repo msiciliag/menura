@@ -10,8 +10,8 @@ A transcription tool that saves in text format your recordings in real time. Sup
 # Installation (TODO)
 > It is recomended to use a python virtual enviroment.
 ## Dependencies (TODO)
-- Setup [Assembly AI](https://www.assemblyai.com/)
-- Setup Notion API
+- [Assembly AI](https://www.assemblyai.com/)
+- LangChain
 ## Assembly AI setup (TODO)
 Create an account in their [webpage](https://www.assemblyai.com/), and paste your token on:
 ```
