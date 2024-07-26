@@ -3,7 +3,7 @@ import wave
 from pynput import keyboard
 
 class AudioRecorder:
-    def __init__(self, output_path, format=pyaudio.paInt16, channels=1, rate=44100, frames_per_buffer=1024):
+    def __init__(self, output_path, format=pyaudio.paInt16, channels=1, rate=16000, frames_per_buffer=1024):
         self.output_path = output_path
         self.format = format
         self.channels = channels
@@ -44,7 +44,7 @@ def on_press(key, recorder):
         pass
 
 if __name__ == "__main__":
-    output_path = "./media/output.wav"
+    output_path = "/Users/angel/Documents/dev/menura/menura/media/output.wav"
     recorder = AudioRecorder(output_path)
     recorder.start_recording()
 
