@@ -35,20 +35,20 @@ class AudioRecorder:
         sound_file.close()
         print(f"Audio recorded and saved to {self.output_path}")
 
-def on_press(key, recorder):
-    try:
-        if key.char == 's':
-            print("Stopping recording.")
-            return False
-    except AttributeError:
-        pass
+    def quit(self, key):
+        try:
+            if key.char == 's':
+                print("Stopping recording.")
+                return False
+        except AttributeError:
+            pass
 
 if __name__ == "__main__":
     output_path = "/Users/angel/Documents/dev/menura/menura/media/output.wav"
     recorder = AudioRecorder(output_path)
     recorder.start_recording()
 
-    with keyboard.Listener(on_press=lambda key: on_press(key, recorder)) as listener:
+    with keyboard.Listener(on_press=lambda key: recorder.quit(key)) as listener:
         listener.join()
 
     recorder.stop_recording()
