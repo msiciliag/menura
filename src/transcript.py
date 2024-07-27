@@ -2,6 +2,7 @@ import subprocess
 import sys
 import os
 import time
+import os
 
 class AudioTranscriber:
 
@@ -21,13 +22,23 @@ class AudioTranscriber:
             print(f"File {self.wav_file_path} not found.")
             sys.exit(1)
 
-        process_command = f"modules/whisper.cpp/main --model {model} --file {self.wav_file_path} --output-txt --print-colors --language es"
+
+        process_command = [
+            "modules/whisper.cpp/main",
+            "--model", model,
+            "--file", self.wav_file_path,
+            "--output-txt",
+            "--print-colors",
+            "--language", "es"
+        ]
         try:
-            process = subprocess.run(process_command, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            process = subprocess.run(process_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
             print(process.stdout.decode())
             
         except subprocess.CalledProcessError as e:
             print(e.stderr.decode())
+
+            
         end_time = time.time()
 
         print(f"Transcripted in {end_time - start_time} seconds.")    

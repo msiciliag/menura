@@ -3,12 +3,12 @@ from transcript import AudioTranscriber
 
 from pynput import keyboard
 
-OUTPUT_PATH = "./media/output.wav"
+OUTPUT_PATH = "./media/"
 MODEL = "medium"
 
 
 def handle_recording() -> None:
-    recorder = AudioRecorder(OUTPUT_PATH)
+    recorder = AudioRecorder(OUTPUT_PATH + "output")
     recorder.start_recording()
 
     with keyboard.Listener(on_press=lambda key: recorder.end_recording(key)) as listener:
@@ -18,11 +18,13 @@ def handle_recording() -> None:
     
 
 def handle_transcription() -> None:
-    transcriber = AudioTranscriber(OUTPUT_PATH, MODEL)
+    transcriber = AudioTranscriber(OUTPUT_PATH + "output-processed.wav", MODEL)
     transcriber.transcript()
     
-
+    
 
 if __name__ == "__main__":
     handle_recording()
     handle_transcription()
+    
+
