@@ -2,6 +2,11 @@ import pyaudio
 import wave
 from pynput import keyboard
 
+from pydub import AudioSegment
+from pydub.silence import detect_nonsilent
+
+
+
 class AudioRecorder:
     def __init__(self, output_path, format=pyaudio.paInt16, channels=1, rate=16000, frames_per_buffer=1024):
         self.output_path = output_path
@@ -33,22 +38,25 @@ class AudioRecorder:
         sound_file.setframerate(self.rate)
         sound_file.writeframes(b''.join(self.frames))
         sound_file.close()
+
+        audio = AudioSegment.from_file(self.output_path)
+        nonsilent_ranges = detect_nonsilent(audio, min_silence_len=1000, silence_thresh=-40)
+        
+        # Concatenate nonsilent segments
+        nonsilent_audio = AudioSegment.empty()
+        for start, end in nonsilent_ranges:
+            nonsilent_audio += audio[start:end]
+        
+        nonsilent_audio.export(self.output_path + "-processed", format="wav")
+
         print(f"Audio recorded and saved to {self.output_path}")
 
-    def quit(self, key):
+    def end_recording(self, key):
         try:
             if key.char == 's':
                 print("Stopping recording.")
                 return False
         except AttributeError:
             pass
-
-if __name__ == "__main__":
-    output_path = "/Users/angel/Documents/dev/menura/menura/media/output.wav"
-    recorder = AudioRecorder(output_path)
-    recorder.start_recording()
-
-    with keyboard.Listener(on_press=lambda key: recorder.quit(key)) as listener:
-        listener.join()
-
-    recorder.stop_recording()
+    
+    
