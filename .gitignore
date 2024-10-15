@@ -16,6 +16,10 @@ build/
 venv/
 env/
 
+# MacOS specific
+.DS_Store
+
+
 # Project specific
 *.log
 media/*.mp3
@@ -43,4 +47,6 @@ media/*.aif
 # Vscode specific
 .vscode/
 *.code-workspace
+
+
 
