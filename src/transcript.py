@@ -1,45 +1,38 @@
-import subprocess
-import sys
-import os
-import time
-import os
+import torch
+from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
+
 
 class AudioTranscriber:
 
-    def __init__(self, wav_file_path, model_name):
+    def __init__(self, wav_file_path, model_id):
         self.wav_file_path = wav_file_path
-        self.model_name = model_name
+        self.model_id = model_id
 
 
     def transcript(self):
-        start_time = time.time()
-        model = f"modules/whisper.cpp/models/ggml-{self.model_name}.bin"
-        if not os.path.exists(model):
-            print(f"Model {self.model_name} not found.")
-            sys.exit(1)
-    
-        if not os.path.exists(self.wav_file_path):
-            print(f"File {self.wav_file_path} not found.")
-            sys.exit(1)
+        device = "cuda:0" if torch.cuda.is_available() else "cpu"
+        torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
+        model = AutoModelForSpeechSeq2Seq.from_pretrained(
+            self.model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
+        )
+        model.to(device)
 
-        process_command = [
-            "modules/whisper.cpp/main",
-            "--model", model,
-            "--file", self.wav_file_path,
-            "--output-txt",
-            "--print-colors",
-            "--language", "es"
-        ]
-        try:
-            process = subprocess.run(process_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            print(process.stdout.decode())
+        processor = AutoProcessor.from_pretrained(self.model_id)
+
+        pipe = pipeline(
+            "automatic-speech-recognition",
+            model=model,
+            tokenizer=processor.tokenizer,
+            feature_extractor=processor.feature_extractor,
+            torch_dtype=torch_dtype,
+            device=device,
             
-        except subprocess.CalledProcessError as e:
-            print(e.stderr.decode())
+        )
 
-            
-        end_time = time.time()
-
-        print(f"Transcripted in {end_time - start_time} seconds.")    
+        
+        result = pipe(self.wav_file_path, return_timestamps=True, generate_kwargs={"language": "spanish"})
+        print(result["text"])
     
+
+

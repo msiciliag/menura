@@ -1,13 +1,18 @@
+import os
 import pyaudio
 import wave
-import subprocess
 from pynput import keyboard
 
 
 class AudioRecorder:
     def __init__(self, output_path, format=pyaudio.paInt16, channels=1, rate=44100, frames_per_buffer=1024):
+        
+        dir_path = os.path.dirname(output_path)
+        if dir_path and not os.path.exists(dir_path):
+            os.makedirs(dir_path)
+
+
         self.output_path = output_path + ".wav"
-        self.output_path_processed = output_path + "-processed.wav"
         self.format = format
         self.channels = channels
         self.rate = rate
@@ -38,8 +43,6 @@ class AudioRecorder:
         sound_file.close()
         
         print(f"Audio recorded and saved to {self.output_path}")
-        process = subprocess.run(f"ffmpeg -i {self.output_path} -ar 16000 -ac 1 -c:a pcm_s16le {self.output_path_processed}", shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        print(f"audio proceesed correctly - {process.stdout.decode()}")
 
     def end_recording(self, key):
         try:
