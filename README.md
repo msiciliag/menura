@@ -37,7 +37,7 @@ python menura.py
 ```
 
 ## Documentation
-For more information on the scraper, please refer to the [documentation](https://msiciliag.github.io/menura)(not available yet) or comments in the code.
+For more information on the tool, please refer to the [documentation](https://msiciliag.github.io/menura)(not available yet) or comments in the code.
 
 ## Last Updated
 This README was last updated on 16 October 2024.
