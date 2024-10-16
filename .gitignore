@@ -49,6 +49,8 @@ media/*.wma
 media/*.aiff
 media/*.aif
 
+cache_models/
+
 transciptions/*.txt
 
 

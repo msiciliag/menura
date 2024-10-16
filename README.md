@@ -19,9 +19,11 @@ git clone https://github.com/msiciliag/menura
 cd menura
 poetry install
 ```
-Activate the virtual environment created by poetry:
+Activate the virtual environment created by poetry and complete the setup:
 ```bash
-poetry shell
+poetry env use
+pip install torch
+pip install accelerate
 ```
 
 ## Features
@@ -31,9 +33,14 @@ poetry shell
 - Summarize transcripts (TODO)
 
 ## Usage
-To run menura:
+To run menura on command line:
 ```bash
-python src/main.py
+python menura/src/menura.py
+```
+
+To run menura on app:
+```bash
+flet run menura
 ```
 
 ## Documentation
