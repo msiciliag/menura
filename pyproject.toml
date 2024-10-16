@@ -11,6 +11,8 @@ package-mode = false
 python = "^3.12"
 pynput = "^1.7.7"
 transformers = "^4.45.2"
+pyaudio = "^0.2.14"
+wave = "^0.0.2"
 
 [tool.poe.tasks]
 ## PyTorch with CUDA 11.1. If PyTorch is imported first, importing Tensorflow will detect CUDA + cuDNN bundled with PyTorch
