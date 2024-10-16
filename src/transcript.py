@@ -28,7 +28,7 @@ class AudioTranscriber:
         torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
         model = AutoModelForSpeechSeq2Seq.from_pretrained(
-            self.model_id, torchg_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
+            self.model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
         )
         model.to(device)
 

@@ -26,14 +26,14 @@ poetry shell
 
 ## Features
 - Record and store transcripts
-- Organize transcripts for RAG use based on theme(TODO)
+- Organize transcripts for RAG use based on theme (TODO)
 - Analyze transcripts (TODO)
 - Summarize transcripts (TODO)
 
 ## Usage
 To run menura:
 ```bash
-python menura.py
+python src/main.py
 ```
 
 ## Documentation
