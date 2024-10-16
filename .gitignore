@@ -3,6 +3,11 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
+# Not ready to Build
+src/summarize.py
+
+
 # C extensions
 *.so
 
@@ -44,9 +49,15 @@ media/*.wma
 media/*.aiff
 media/*.aif
 
+
+transcriptions/*.txt
+
+
 # Vscode specific
 .vscode/
 *.code-workspace
+
+
 
 
 

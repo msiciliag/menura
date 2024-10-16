@@ -1,5 +1,8 @@
 import torch
 from transformers import AutoModelForSpeechSeq2Seq, AutoProcessor, pipeline
+import os
+
+OUTPUT_PATH = "./transciptions/output.txt"
 
 
 class AudioTranscriber:
@@ -8,13 +11,24 @@ class AudioTranscriber:
         self.wav_file_path = wav_file_path
         self.model_id = model_id
 
+    def save_transcript(self, transctiption_output):
+            if os.path.exists(""):
+                os.remove(OUTPUT_PATH)
+
+            with open(OUTPUT_PATH, "w") as f:
+                f.write(transctiption_output)
+            
+            print("Transcript saved successfully.")
+            
+
+   
 
     def transcript(self):
         device = "cuda:0" if torch.cuda.is_available() else "cpu"
         torch_dtype = torch.float16 if torch.cuda.is_available() else torch.float32
 
         model = AutoModelForSpeechSeq2Seq.from_pretrained(
-            self.model_id, torch_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
+            self.model_id, torchg_dtype=torch_dtype, low_cpu_mem_usage=True, use_safetensors=True
         )
         model.to(device)
 
@@ -29,10 +43,13 @@ class AudioTranscriber:
             device=device,
             
         )
+        try:
+            result = pipe(self.wav_file_path, return_timestamps=True, generate_kwargs={"language": "spanish"})        
+            self.save_transcript(result["text"])
+        except Exception as e:
+            print("An error occurred while transcribing the audio.\n" +  str(e))
 
         
-        result = pipe(self.wav_file_path, return_timestamps=True, generate_kwargs={"language": "spanish"})
-        print(result["text"])
     
 
 
