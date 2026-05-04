@@ -17,6 +17,7 @@ kuzu = "^0.4.2"
 pydantic = "^2.7.4"
 pyyaml = "^6.0.1"
 numpy = "1.26.4"
+openai = "^1.35.3"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
