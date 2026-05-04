@@ -1,12 +1,16 @@
 import asyncio
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from app.services.audio_service import AudioProcessor
 
 app = FastAPI(
     title="Menura Backend",
     description="Motor Inteligente para el Asistente Personal Menura 2.0 (GraphRAG Híbrido)",
     version="2.0.0"
 )
+
+# Initialize Audio Processor (this is blocking, in production we might lazy-load or use Lifespan events)
+audio_processor = AudioProcessor(model_size="tiny", device="cpu", compute_type="int8") # using tiny for faster prototyping without full setup
 
 # Permitir conexiones desde Tauri y otros orígenes
 app.add_middleware(
@@ -39,23 +43,26 @@ async def status():
 async def websocket_audio_endpoint(websocket: WebSocket):
     """
     Endpoint principal de ingesta de audio.
-    Recibe un stream continuo de PCM del cliente, aplica VAD (Voice Activity Detection),
+    Recibe un stream continuo de PCM 16-bit 16kHz mono del cliente, aplica VAD (Voice Activity Detection),
     transcribe con Faster-Whisper, y devuelve texto parcial/final.
     """
     await websocket.accept()
     print("Nuevo cliente conectado al canal de ingesta de audio.")
     try:
         while True:
-            # En la Fase 2, aquí recibiremos los bytes de audio:
+            # Recibimos los bytes de audio crudo (PCM)
             data = await websocket.receive_bytes()
             
-            # TODO: Pasar por VAD y Faster-Whisper
-            # Simulamos que le devolvemos una transcripción al cliente en tiempo real
-            await websocket.send_json({
-                "type": "transcription_update",
-                "content": f"[Simulación] Recibido fragmento de {len(data)} bytes.",
-                "is_final": False
-            })
+            # Procesamos con el motor STT y VAD
+            # En un entorno real, esto se haría en un threadpool o worker asíncrono para no bloquear el bucle del WebSocket
+            transcription = await asyncio.to_thread(audio_processor.process_audio_chunk, data)
+            
+            if transcription:
+                await websocket.send_json({
+                    "type": "transcription_update",
+                    "content": transcription,
+                    "is_final": True
+                })
 
     except WebSocketDisconnect:
         print("Cliente desconectado del canal de audio.")
